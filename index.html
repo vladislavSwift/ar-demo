@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metaverse Portal</title>
+  
+  <!-- 1. Load Google Fonts for a futuristic look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+
+  <!-- 2. Load the Model-Viewer Library -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+
+  <style>
+    /* RESET */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* --- THE LANDING PAGE (Overlay) --- */
+    #landing-page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999; /* Sits on top of the 3D viewer */
+      
+      /* FUTURISTIC BACKGROUND */
+      /* Replace the URL below with your own portal image if you have one */
+      background: 
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+        url('https://images.unsplash.com/photo-1535498730771-e735b998cd64?q=80&w=2560&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* GLOWING PORTAL EFFECT BEHIND BUTTON */
+    .portal-ring {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border: 2px solid cyan;
+      border-radius: 50%;
+      box-shadow: 0 0 20px cyan, inset 0 0 20px cyan;
+      animation: pulse 2s infinite;
+      pointer-events: none; /* Let clicks pass through */
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px cyan;
+      padding: 0 20px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    /* THE ENTER BUTTON */
+    #enter-btn {
+      position: relative;
+      padding: 15px 40px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #000;
+      background: cyan;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 15px cyan;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    #enter-btn:hover {
+      background: #fff;
+      box-shadow: 0 0 30px white;
+      transform: scale(1.05);
+    }
+
+    /* --- THE 3D VIEWER (Hidden Logic) --- */
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      /* We hide the default AR button because we use our custom one */
+      --poster-color: transparent;
+    }
+    
+    /* Hide default button from model-viewer */
+    model-viewer::part(default-ar-button) {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LANDING PAGE -->
+  <div id="landing-page">
+    <div class="portal-ring"></div>
+    <h1>WELCOME SAMSOKNIGHTS</h1>
+     <h2>TO THE FUTURE</h2>
+    <p>OF METAVERSE TRAVELLING</p>
+    <button id="enter-btn">ENTER PORTAL</button>
+  </div>
+
+  <!-- 3D MODEL LOADER -->
+  <!-- 
+     1. src: Your Android/Web file
+     2. ios-src: Your iPhone file
+     3. ar-scale: "fixed" ensures it stays true to size (good for walking inside)
+  -->
+<!--   <model-viewer 
+    id="portal-viewer"
+    src="./model.glb" 
+    ios-src="./model.usdz"
+    alt="Metaverse Portal"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    ar-scale="fixed" 
+    disable-zoom
+    shadow-intensity="1">
+  </model-viewer> -->
+
+  <model-viewer 
+  id="portal-viewer"
+  src="./model.glb" 
+  ios-src="./model.usdz"
+  alt="Metaverse Portal"
+  ar
+  ar-modes="webxr quick-look"  camera-controls
+  ar-scale="fixed" 
+  disable-zoom
+  shadow-intensity="1">
+</model-viewer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    const enterBtn = document.getElementById('enter-btn');
+    const viewer = document.getElementById('portal-viewer');
+    const landingPage = document.getElementById('landing-page');
+
+    enterBtn.addEventListener('click', () => {
+      // 1. Attempt to activate AR immediately
+      viewer.activateAR();
+
+      // 2. Optional: If not on mobile, or if user cancels AR, 
+      // we fade out the landing page so they can see the 3D model on screen.
+      landingPage.style.opacity = '0';
+      landingPage.style.pointerEvents = 'none'; // disable clicks
+      landingPage.style.transition = 'opacity 1s ease';
+    });
+  </script>
+
+</body>
+</html>
